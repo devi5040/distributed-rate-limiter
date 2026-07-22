@@ -4,7 +4,8 @@
   "description": "A distributed rate limiter built with Redis and TypeScript, implementing fixed-window, sliding-window, and token-bucket algorithms via atomic Lua scripts. Designed as an npm workspace monorepo with a pluggable core package for use across HTTP frameworks like Express and Fastify.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,14 @@
   },
   "homepage": "https://github.com/devi5040/distributed-rate-limiter#readme",
   "dependencies": {
-    "ioredis": "^5.11.1"
+    "ioredis": "^5.11.1",
+    "ts-jest": "^29.4.11"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^26.1.1",
+    "jest": "^30.4.2",
     "tsx": "^4.23.1",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   }
 }

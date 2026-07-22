@@ -1,7 +1,7 @@
 import { Redis } from "ioredis";
 import type { RedisOptions } from "ioredis";
 import fs from "fs";
-import path from "path";
+import path from "node:path";
 
 export function createRedisClient(options?: RedisOptions): Redis {
   const redis = new Redis({
@@ -13,7 +13,7 @@ export function createRedisClient(options?: RedisOptions): Redis {
   redis.defineCommand("fixedWindow", {
     numberOfKeys: 1,
     lua: fs.readFileSync(
-      path.join(__dirname, "../scripts/fixed-window.lua"),
+      "/distributed-rate-limiter/core/scripts/fixed-window.lua",
       "utf-8",
     ),
   });

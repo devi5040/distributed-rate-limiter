@@ -15,3 +15,5 @@ export interface RateLimiter {
 }
 
 export type LuaFixedWindowResponse = [number, number, number];
+
+export type LuaTokenBucketResponse = [number, number, number];

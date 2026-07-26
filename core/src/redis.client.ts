@@ -18,5 +18,13 @@ export function createRedisClient(options?: RedisOptions): Redis {
     ),
   });
 
+  redis.defineCommand("tokenBucket", {
+    numberOfKeys: 1,
+    lua: fs.readFileSync(
+      "/distributed-rate-limiter/core/scripts/token-bucket.lua",
+      "utf-8",
+    ),
+  });
+
   return redis;
 }

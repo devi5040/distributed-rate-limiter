@@ -14,4 +14,10 @@ export default {
     // Fixes mandatory .js extension imports inside TypeScript ESM
     "^(\\..*)\\.js$": "$1",
   },
+
+  // 👇 Only run tests from source
+  testMatch: ["**/__tests__/**/*.test.ts"],
+
+  // 👇 Ignore compiled output
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };

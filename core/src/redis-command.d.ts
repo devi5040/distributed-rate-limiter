@@ -1,5 +1,8 @@
 import "ioredis";
-import type { LuaFixedWindowResponse } from "./types.ts";
+import type {
+  LuaFixedWindowResponse,
+  LuaTokenBucketResponse,
+} from "./types.ts";
 
 declare module "ioredis" {
   interface RedisCommander<Context> {
@@ -9,5 +12,12 @@ declare module "ioredis" {
       windowSeconds: number | string,
       cost: number | string,
     ): Promise<LuaFixedWindowResponse>;
+    tokenBucket(
+      key: string,
+      cost: number | string,
+      capacity: number | string,
+      refillRate: number | string,
+      windowSeconds: number | string,
+    ): Promise<LuaTokenBucketResponse>;
   }
 }

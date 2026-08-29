@@ -1,7 +1,6 @@
 import { Redis } from "ioredis";
 import type { RedisOptions } from "ioredis";
 import fs from "fs";
-import path from "node:path";
 
 export function createRedisClient(options?: RedisOptions): Redis {
   const redis = new Redis({
@@ -22,6 +21,14 @@ export function createRedisClient(options?: RedisOptions): Redis {
     numberOfKeys: 1,
     lua: fs.readFileSync(
       "/distributed-rate-limiter/core/scripts/token-bucket.lua",
+      "utf-8",
+    ),
+  });
+
+  redis.defineCommand("slidingWindowLog", {
+    numberOfKeys: 1,
+    lua: fs.readFileSync(
+      "/distributed-rate-limiter/core/scripts/sliding-window-log.lua",
       "utf-8",
     ),
   });

@@ -21,7 +21,8 @@
   "homepage": "https://github.com/devi5040/distributed-rate-limiter#readme",
   "dependencies": {
     "ioredis": "^5.11.1",
-    "ts-jest": "^29.4.11"
+    "ts-jest": "^29.4.11",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

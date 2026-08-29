@@ -1,6 +1,7 @@
 import "ioredis";
 import type {
   LuaFixedWindowResponse,
+  LuaSlidingWindowLogResponse,
   LuaTokenBucketResponse,
 } from "./types.ts";
 
@@ -19,5 +20,11 @@ declare module "ioredis" {
       refillRate: number | string,
       windowSeconds: number | string,
     ): Promise<LuaTokenBucketResponse>;
+    slidingWindowLog(
+      key: string,
+      limit: number | string,
+      windowSeconds: number | string,
+      uniqueId: number | string,
+    ): Promise<LuaSlidingWindowLogResponse>;
   }
 }

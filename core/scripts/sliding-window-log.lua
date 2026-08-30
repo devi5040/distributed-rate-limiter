@@ -6,7 +6,7 @@ local now = redis.call("TIME")
 local nowSeconds = tonumber(now[1])
 local nowMicro = tonumber(now[2])
 
-redis.call("ZREMRANGEBYSCORE", KEYS[1], 0, nowSeconds-windowSeconds)
+redis.call("ZREMRANGEBYSCORE", KEYS[1], 0, (nowSeconds+nowMicro/1000000)-windowSeconds)
 
 local count = tonumber(redis.call("ZCARD", KEYS[1]))
 if count>=limit then

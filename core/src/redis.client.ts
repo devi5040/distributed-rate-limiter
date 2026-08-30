@@ -33,5 +33,13 @@ export function createRedisClient(options?: RedisOptions): Redis {
     ),
   });
 
+  redis.defineCommand("slidingWindowCounter", {
+    numberOfKeys: 1,
+    lua: fs.readFileSync(
+      "/distributed-rate-limiter/core/scripts/sliding-window-counter.lua",
+      "utf-8",
+    ),
+  });
+
   return redis;
 }

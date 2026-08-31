@@ -14,10 +14,4 @@ export interface RateLimiter {
   consume(key: string, cost?: number): Promise<RateLimitResult>;
 }
 
-export type LuaFixedWindowResponse = [number, number, number];
-
-export type LuaTokenBucketResponse = [number, number, number];
-
-export type LuaSlidingWindowLogResponse = [number, number, number];
-
-export type LuaSlidingWindowCounterResponse = [number, number, number];
+export type LuaResponse = [number, number, number];

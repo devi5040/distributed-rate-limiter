@@ -1,10 +1,6 @@
 local leakRate = tonumber(ARGV[1]) or 0
 local capacity = tonumber(ARGV[2]) or 0
 local cost = tonumber(ARGV[3])
--- windowSeconds is a flat TTL, not derived from capacity/leakRate.
--- Safe only while capacity/leakRate stays well under this value —
--- if that ratio can exceed windowSeconds, the key may expire mid-drain.
-local windowSeconds = tonumber(ARGV[4]) or 3600
 
 local now = redis.call("TIME")
 local nowSeconds = tonumber(now[1])
@@ -21,13 +17,18 @@ local elapsed = currentTime - tonumber(existingLastDrain)
 local leaked = leakRate * elapsed
 local newLevel = math.max(0, existingLevel - leaked)
 
-if(newLevel+cost>capacity) then
-    local ttl = redis.call("TTL", KEYS[1])
-    return {0, 0, ttl}
+local function drainTime(amount)
+    if leakRate <=0 then return 0 end
+    return math.ceil(amount/leakRate)
+end
+
+if(newLevel + cost >capacity) then
+    return {0, 0, drainTime(newLevel + cost - capacity)}
 end
 
 redis.call("HSET", KEYS[1], 'level', newLevel+cost, 'lastDrain', currentTime)
-redis.call("EXPIRE", KEYS[1], windowSeconds)
 
-local ttl = redis.call("TTL", KEYS[1])
-return {1, capacity-newLevel-cost, ttl}
+local ttl = (leakRate>0) and (math.ceil(capacity/leakRate) + 1) or 3600
+redis.call("EXPIRE", KEYS[1], ttl)
+
+return {1, math.floor(capacity-newLevel-cost), drainTime(newLevel+cost)}

@@ -2,8 +2,8 @@ local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
 
 local time = redis.call("TIME")
-local nowSeconds = time[1]
-local microSeconds = time[2]
+local nowSeconds = tonumber(time[1])
+local microSeconds = tonumber(time[2])
 
 local windowIndex = math.floor((nowSeconds+microSeconds/1000000)/windowSeconds)
 local currentKey = KEYS[1]..":"..windowIndex
@@ -17,15 +17,13 @@ local previousCount = tonumber(redis.call("GET", previousKey)) or 0
 
 local estimatedCount = previousCount * (1-elapsedFraction) + currentCount
 
-local ttl = redis.call("TTL", currentKey)
+local resetIn = math.ceil(windowSeconds * (1 - elapsedFraction))
 
 if estimatedCount >= limit then
-    return {0,0,ttl}
+    return {0,0,resetIn}
 end
 
 redis.call('SET', currentKey, currentCount+1)
 redis.call("EXPIRE", currentKey, 2*windowSeconds)
 
-ttl = redis.call("TTL", currentKey)
-
-return {1, math.floor(limit-estimatedCount), ttl}
+return {1, math.floor(limit-estimatedCount-1), resetIn}
